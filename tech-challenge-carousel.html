@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carousel</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <div class="container">
+        <div class="view">
+            <div class="track">
+                <div data-index="0" class="slide active">
+                    <img src="./img/Untitled-1.png"/>
+                </div>
+                <div data-index="1" class="slide">
+                    <img src="./img/Untitled-2.png"/>
+                </div>
+                <div data-index="2" class="slide">
+                    <img src="./img/Untitled-3.png"/>
+                </div>
+                <div data-index="3" class="slide">
+                    <img src="./img/Untitled-4.png"/>
+                </div>
+                <div data-index="4" class="slide">
+                    <img src="./img/Untitled-5.png"/>
+                </div>
+            </div>
+        </div>
+
+        <button class="nav prev" onclick="prev()"><</button>
+        <button class="nav next" onclick="next()">></button>
+    </div>
+    <div class="dots">
+        <span class="dot" data-index="0"></span>
+        <span class="dot" data-index="1"></span>
+        <span class="dot" data-index="2"></span>
+        <span class="dot" data-index="3"></span>
+        <span class="dot" data-index="4"></span>
+    </div>
+
+    <script>
+        const track = document.querySelector('.track');
+        const slides = () => Array.from(track.children);
+        const slidewidth = track.children[0].offsetWidth + 32;
+        const center = 2;
+
+        const dots = Array.from(document.querySelectorAll('.dot'));
+
+        function setactive(){
+            slides().forEach(slide => slide.classList.remove('active'));
+            slides()[center].classList.add('active');
+
+            const current = Number(slides()[center].dataset.index);
+            dots.forEach((dot, i)=>{
+                dot.classList.toggle("active", i === current);
+            });
+        }
+        function next() {
+            track.style.transition = 'transform 0.4s ease';
+            track.style.transform = `translateX(-${slidewidth}px)`;
+
+            track.addEventListener('transitionend', () => {
+                track.style.transition = 'none';
+                track.appendChild(track.firstElementChild);
+                track.style.transform = 'translateX(0)';
+                setactive();
+            }, { once: true });
+        }
+        function prev(){
+            track.style.transition = 'none';
+            track.insertBefore(track.lastElementChild, track.firstElementChild);
+            track.style.transform = `translateX(-${slidewidth}px)`;
+
+            requestAnimationFrame(() => {
+                track.style.transition = 'transform 0.4s ease';
+                track.style.transform = 'translateX(0)';
+            });
+
+            track.addEventListener('transitionend', () => {
+                setactive();
+            }, { once: true });
+        }
+
+        setactive();
+    </script>
+
+</body>
+</html>
