@@ -7,9 +7,12 @@
     <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
+    <!-- container utk setiap slide -->
     <div class="container">
         <div class="view">
+            <!-- class yang nanti geser (yang geser nanti class ini) -->
             <div class="track">
+                <!-- slide dan gambar, ada class active buat bikin slide lebih gede dan full opacity-->
                 <div data-index="0" class="slide active">
                     <img src="./img/Untitled-1.png"/>
                 </div>
@@ -27,10 +30,11 @@
                 </div>
             </div>
         </div>
-
+        <!-- tombol next dan previous -->
         <button class="nav prev" onclick="prev()"><</button>
         <button class="nav next" onclick="next()">></button>
     </div>
+    <!-- titik yang ada di bawah carousel -->
     <div class="dots">
         <span class="dot" data-index="0"></span>
         <span class="dot" data-index="1"></span>
@@ -40,49 +44,49 @@
     </div>
 
     <script>
-        const track = document.querySelector('.track');
-        const slides = () => Array.from(track.children);
-        const slidewidth = track.children[0].offsetWidth + 32;
-        const center = 2;
+        const track = document.querySelector('.track'); //buat geser
+        const slides = () => Array.from(track.children); //buat array dari setiap div slide
+        const slidewidth = track.children[0].offsetWidth + 32; //cari ukuran 1 slide buat nanti geser
+        const center = 2; //gambar yang mulai duluan
 
-        const dots = Array.from(document.querySelectorAll('.dot'));
+        const dots = Array.from(document.querySelectorAll('.dot')); //array untuk titik
 
         function setactive(){
-            slides().forEach(slide => slide.classList.remove('active'));
-            slides()[center].classList.add('active');
+            slides().forEach(slide => slide.classList.remove('active')); //hapus class active dari semua array slide
+            slides()[center].classList.add('active'); //tambahin class active ke slide yang ditengah
 
-            const current = Number(slides()[center].dataset.index);
+            const current = Number(slides()[center].dataset.index); //nentuin lagi di slide ke berapa
             dots.forEach((dot, i)=>{
-                dot.classList.toggle("active", i === current);
+                dot.classList.toggle("active", i === current); //tambahin class active ke titik yang sesuai dengan slide (kalo lagi slide ke 4, titik yang active ke 4)
             });
         }
         function next() {
-            track.style.transition = 'transform 0.4s ease';
-            track.style.transform = `translateX(-${slidewidth}px)`;
+            track.style.transition = 'transform 0.4s ease'; //tambahin transisi pas geser
+            track.style.transform = `translateX(-${slidewidth}px)`; //geser ke kanan sejauh ukuran slide
 
-            track.addEventListener('transitionend', () => {
-                track.style.transition = 'none';
-                track.appendChild(track.firstElementChild);
-                track.style.transform = 'translateX(0)';
-                setactive();
-            }, { once: true });
+            track.addEventListener('transitionend', () => { //pas udah selesai transisi/geser,
+                track.style.transition = 'none'; //ilangin transisi yang barusan
+                track.appendChild(track.firstElementChild); //pindahin slide yang paling kiri ke bagian paling kanan
+                track.style.transform = 'translateX(0)'; //balikin carousel ke tengah karena tadi abis di geser (track.style.transform = `translateX(-${slidewidth}px)`)
+                setactive(); //jalanin fungsi ini buat bikin slide yang baru geser ke tengah buat jadi active
+            }, { once: true }); //mastiin kalo addeventlistener cuma jalan sekali
         }
         function prev(){
-            track.style.transition = 'none';
-            track.insertBefore(track.lastElementChild, track.firstElementChild);
-            track.style.transform = `translateX(-${slidewidth}px)`;
+            track.style.transition = 'none'; //ngilangin semua transisi yang masih ada
+            track.insertBefore(track.lastElementChild, track.firstElementChild); //pindahin slide yang paling kanan ke paling kiri
+            track.style.transform = `translateX(-${slidewidth}px)`; //geser ke kiri sejauh ukuran slide
 
             requestAnimationFrame(() => {
-                track.style.transition = 'transform 0.4s ease';
-                track.style.transform = 'translateX(0)';
+                track.style.transition = 'transform 0.4s ease'; //tambahin transisi pas geser
+                track.style.transform = 'translateX(0)'; //balikin carousel ke tengah karena tadi abis di geser (track.style.transform = `translateX(-${slidewidth}px)`)
             });
 
-            track.addEventListener('transitionend', () => {
+            track.addEventListener('transitionend', () => { //pas semua transisi udah selesai, jalanin fungsi buat bikin yang bagian tengah active
                 setactive();
-            }, { once: true });
+            }, { once: true }); //mastiin kalo addeventlistener cuma jalan sekali
         }
 
-        setactive();
+        setactive(); //ngebuat slide tengah active untuk pertama kali website ke load
     </script>
 
 </body>
